@@ -19,5 +19,5 @@ This project analyzes AI usage trends through:
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/ai-analysis-website.git
+   git clone https://github.com/SarthakMitra323/Data-Analysis-AI-metrics-study-.git
    cd ai-analysis-website
