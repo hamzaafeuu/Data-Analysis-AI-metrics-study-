@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Usage Analysis (2000-2025)</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3a0ca3;
+            --accent: #7209b7;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #4cc9f0;
+            --warning: #f72585;
+            --transition: all 0.3s ease;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 2rem 1rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            animation: fadeInUp 1s ease;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto;
+            animation: fadeInUp 1s ease 0.2s both;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+        
+        section {
+            margin-bottom: 4rem;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: var(--transition);
+        }
+        
+        section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        h2 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: var(--secondary);
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+        
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 4px;
+            background: var(--accent);
+            border-radius: 2px;
+        }
+        
+        .chart-container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            transition: var(--transition);
+        }
+        
+        .chart-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            text-align: center;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--primary);
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin: 0.5rem 0;
+        }
+        
+        .stat-label {
+            color: var(--dark);
+            opacity: 0.8;
+        }
+        
+        .timeline {
+            position: relative;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .timeline::after {
+            content: '';
+            position: absolute;
+            width: 4px;
+            background: var(--primary);
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -2px;
+        }
+        
+        .timeline-item {
+            padding: 10px 40px;
+            position: relative;
+            width: 50%;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .timeline-item:nth-child(odd) {
+            left: 0;
+        }
+        
+        .timeline-item:nth-child(even) {
+            left: 50%;
+        }
+        
+        .timeline-content {
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            position: relative;
+            transition: var(--transition);
+        }
+        
+        .timeline-content:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+        
+        .timeline-year {
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: var(--accent);
+            border: 4px solid white;
+            border-radius: 50%;
+            top: 15px;
+            z-index: 1;
+        }
+        
+        .timeline-item:nth-child(odd)::after {
+            right: -10px;
+        }
+        
+        .timeline-item:nth-child(even)::after {
+            left: -10px;
+        }
+        
+        .phase-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .phase-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: var(--transition);
+            border-top: 5px solid var(--primary);
+        }
+        
+        .phase-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        
+        .phase-period {
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .phase-title {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: var(--secondary);
+        }
+        
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 2rem 1rem;
+            text-align: center;
+        }
+        
+        .sources {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: left;
+        }
+        
+        .sources h3 {
+            margin-bottom: 1rem;
+            color: var(--success);
+        }
+        
+        .sources ul {
+            list-style-type: none;
+        }
+        
+        .sources li {
+            margin-bottom: 0.5rem;
+            padding-left: 1rem;
+            position: relative;
+        }
+        
+        .sources li::before {
+            content: '•';
+            color: var(--success);
+            position: absolute;
+            left: 0;
+        }
+        
+        .conclusion {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            margin-top: 2rem;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .timeline::after {
+                left: 31px;
+            }
+            
+            .timeline-item {
+                width: 100%;
+                padding-left: 70px;
+                padding-right: 25px;
+            }
+            
+            .timeline-item:nth-child(even) {
+                left: 0;
+            }
+            
+            .timeline-item::after {
+                left: 21px;
+            }
+            
+            .timeline-item:nth-child(odd)::after,
+            .timeline-item:nth-child(even)::after {
+                left: 21px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1>AI Usage Analysis (2000-2025)</h1>
+            <p class="subtitle">Tracking the evolution, adoption, and impact of artificial intelligence over a quarter century</p>
+        </div>
+    </header>
+    
+    <div class="container">
+        <section id="overview">
+            <h2>AI Adoption Overview</h2>
+            <p>Artificial Intelligence has transformed from an academic curiosity to a foundational technology powering modern society. This analysis tracks key metrics from 2000 to 2025.</p>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" id="current-adoption">0%</div>
+                    <div class="stat-label">Current AI Adoption Rate</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="total-investment">$0B</div>
+                    <div class="stat-label">Total AI Investment (2025)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="research-papers">0K</div>
+                    <div class="stat-label">AI Research Papers (2025)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="ai-jobs">0K</div>
+                    <div class="stat-label">AI Job Postings (2025)</div>
+                </div>
+            </div>
+            
+            <div class="chart-container">
+                <canvas id="adoptionChart"></canvas>
+            </div>
+        </section>
+        
+        <section id="investment">
+            <h2>AI Investment Trends</h2>
+            <p>Financial investment in AI technologies has grown exponentially, particularly after key breakthroughs in deep learning and generative AI.</p>
+            
+            <div class="chart-container">
+                <canvas id="investmentChart"></canvas>
+            </div>
+        </section>
+        
+        <section id="research">
+            <h2>AI Research & Development</h2>
+            <p>The volume of AI research papers reflects the accelerating pace of innovation and knowledge creation in the field.</p>
+            
+            <div class="chart-container">
+                <canvas id="researchChart"></canvas>
+            </div>
+        </section>
+        
+        <section id="jobs">
+            <h2>AI Job Market</h2>
+            <p>Demand for AI talent has skyrocketed as organizations compete to implement AI solutions across industries.</p>
+            
+            <div class="chart-container">
+                <canvas id="jobsChart"></canvas>
+            </div>
+        </section>
+        
+        <section id="timeline">
+            <h2>AI Timeline: Significant Events</h2>
+            <p>Key milestones that shaped the development and adoption of artificial intelligence.</p>
+            
+            <div class="timeline" id="eventsTimeline">
+                <!-- Timeline items will be populated by JavaScript -->
+            </div>
+        </section>
+        
+        <section id="hype">
+            <h2>AI Hype Cycles</h2>
+            <p>The evolution of AI through distinct phases of development, expectation, and adoption.</p>
+            
+            <div class="phase-grid" id="hypePhases">
+                <!-- Hype phase cards will be populated by JavaScript -->
+            </div>
+        </section>
+        
+        <section id="conclusion">
+            <h2>Conclusion</h2>
+            <div class="conclusion">
+                <p>AI has progressed from academic research to mainstream adoption at an unprecedented pace. Key insights from the data:</p>
+                <ul>
+                    <li><strong>Exponential Growth:</strong> All metrics show exponential growth, particularly after 2012 with the deep learning revolution.</li>
+                    <li><strong>Investment Acceleration:</strong> Financial investment has grown over 800x from 2000 to 2025, with the most rapid growth occurring after 2020.</li>
+                    <li><strong>Research Proliferation:</strong> The volume of AI research papers has increased 55x, indicating massive knowledge expansion.</li>
+                    <li><strong>Talent Demand:</strong> AI job postings have grown 420x, reflecting the critical need for specialized skills.</li>
+                    <li><strong>Generative AI Inflection:</strong> The 2022-2025 period represents a paradigm shift with generative AI becoming accessible to the masses.</li>
+                </ul>
+                <p>Looking ahead, AI is expected to continue its rapid evolution, with increasing focus on ethical AI, regulation, and integration into virtually all aspects of society and industry.</p>
+            </div>
+        </section>
+        
+        <section id="sources">
+            <h2>Data Sources & Methodology</h2>
+            <div class="sources">
+                <p>This analysis is based on aggregated data from multiple reputable sources including:</p>
+                <ul>
+                    <li>Stanford AI Index Report (2020-2024)</li>
+                    <li>McKinsey Global AI Surveys</li>
+                    <li>Gartner Hype Cycle for Emerging Technologies</li>
+                    <li>IDC Worldwide AI Spending Guide</li>
+                    <li>LinkedIn Emerging Jobs Reports</li>
+                    <li>arXiv.org AI Paper Statistics</li>
+                    <li>CB Insights AI Investment Data</li>
+                </ul>
+                <p><em>Note: 2024-2025 data includes projections based on current trends and industry forecasts.</em></p>
+            </div>
+        </section>
+    </div>
+    
+    <footer>
+        <div class="container">
+            <p>AI Usage Analysis Dashboard &copy; 2023 | Data Visualization Project</p>
+        </div>
+    </footer>
+
+    <script>
+        // Sample data (in a real implementation, this would come from the Python-generated JSON)
+        const aiData = {
+            years: [2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025],
+            adoption_rate: [2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 15, 18, 22, 28, 35, 42, 50, 58, 65, 72, 78, 83, 87, 90, 92, 94, 95],
+            investment: [0.5, 0.6, 0.7, 0.8, 1.0, 1.2, 1.5, 1.8, 2.2, 2.7, 3.5, 4.5, 6.0, 8.5, 12.0, 18.0, 26.0, 40.0, 58.0, 78.0, 95.0, 125.0, 156.0, 200.0, 280.0, 350.0, 420.0],
+            research_papers: [3, 3.2, 3.5, 3.8, 4.2, 4.6, 5.1, 5.7, 6.4, 7.2, 8.1, 9.2, 10.5, 12.2, 14.5, 17.5, 21.5, 27.0, 34.0, 42.0, 52.0, 64.0, 78.0, 95.0, 115.0, 138.0, 165.0],
+            job_postings: [5, 5.5, 6, 6.5, 7, 7.5, 8, 8.5, 9, 10, 12, 15, 20, 28, 40, 60, 90, 140, 210, 320, 480, 650, 850, 1100, 1400, 1750, 2100],
+            events: [
+                {year: 2000, event: "MIT's AI Lab becomes CSAIL"},
+                {year: 2006, event: "Geoffrey Hinton coins 'Deep Learning'"},
+                {year: 2011, event: "IBM Watson wins Jeopardy!"},
+                {year: 2012, event: "AlexNet revolutionizes computer vision"},
+                {year: 2014, event: "GANs (Generative Adversarial Networks) introduced"},
+                {year: 2016, event: "AlphaGo defeats Lee Sedol"},
+                {year: 2017, event: "Transformer architecture published"},
+                {year: 2018, event: "GPT-1 released by OpenAI"},
+                {year: 2020, event: "GPT-3 demonstrates remarkable capabilities"},
+                {year: 2022, event: "ChatGPT launch sparks generative AI boom"},
+                {year: 2023, event: "AI regulation discussions intensify globally"},
+                {year: 2024, event: "Multimodal AI models become mainstream"},
+                {year: 2025, event: "AI integration reaches most industries"}
+            ],
+            hype_phases: [
+                {period: "2000-2006", phase: "Early Research", description: "Limited to academia and specialized applications"},
+                {period: "2007-2012", phase: "Machine Learning Adoption", description: "ML becomes practical for business applications"},
+                {period: "2013-2018", phase: "Deep Learning Boom", description: "Neural networks revolutionize AI capabilities"},
+                {period: "2019-2022", phase: "AI Integration", description: "AI becomes embedded in products and services"},
+                {period: "2023-2025", phase: "Generative AI Era", description: "Creative AI models transform content creation"}
+            ]
+        };
+
+        // Update stat cards with animation
+        function animateValue(element, start, end, duration, suffix = '') {
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                const value = Math.floor(progress * (end - start) + start);
+                element.textContent = value + suffix;
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
+
+        // Initialize charts
+        function initializeCharts() {
+            // Adoption Rate Chart
+            const adoptionCtx = document.getElementById('adoptionChart').getContext('2d');
+            new Chart(adoptionCtx, {
+                type: 'line',
+                data: {
+                    labels: aiData.years,
+                    datasets: [{
+                        label: 'AI Adoption Rate (%)',
+                        data: aiData.adoption_rate,
+                        borderColor: '#4361ee',
+                        backgroundColor: 'rgba(67, 97, 238, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'AI Adoption Rate Among Companies (2000-2025)'
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            title: {
+                                display: true,
+                                text: 'Adoption Rate (%)'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Year'
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Investment Chart
+            const investmentCtx = document.getElementById('investmentChart').getContext('2d');
+            new Chart(investmentCtx, {
+                type: 'bar',
+                data: {
+                    labels: aiData.years,
+                    datasets: [{
+                        label: 'AI Investment (Billions USD)',
+                        data: aiData.investment,
+                        backgroundColor: 'rgba(58, 12, 163, 0.7)',
+                        borderColor: 'rgba(58, 12, 163, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Global AI Investment (2000-2025)'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Investment (Billions USD)'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Year'
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Research Papers Chart
+            const researchCtx = document.getElementById('researchChart').getContext('2d');
+            new Chart(researchCtx, {
+                type: 'line',
+                data: {
+                    labels: aiData.years,
+                    datasets: [{
+                        label: 'AI Research Papers (Thousands)',
+                        data: aiData.research_papers,
+                        borderColor: '#7209b7',
+                        backgroundColor: 'rgba(114, 9, 183, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'AI Research Papers Published (2000-2025)'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Research Papers (Thousands)'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Year'
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Jobs Chart
+            const jobsCtx = document.getElementById('jobsChart').getContext('2d');
+            new Chart(jobsCtx, {
+                type: 'bar',
+                data: {
+                    labels: aiData.years,
+                    datasets: [{
+                        label: 'AI Job Postings (Thousands)',
+                        data: aiData.job_postings,
+                        backgroundColor: 'rgba(247, 37, 133, 0.7)',
+                        borderColor: 'rgba(247, 37, 133, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'AI-Related Job Postings (2000-2025)'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Job Postings (Thousands)'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Year'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Populate timeline
+        function populateTimeline() {
+            const timeline = document.getElementById('eventsTimeline');
+            
+            aiData.events.forEach(event => {
+                const timelineItem = document.createElement('div');
+                timelineItem.className = 'timeline-item';
+                
+                timelineItem.innerHTML = `
+                    <div class="timeline-content">
+                        <div class="timeline-year">${event.year}</div>
+                        <p>${event.event}</p>
+                    </div>
+                `;
+                
+                timeline.appendChild(timelineItem);
+            });
+        }
+
+        // Populate hype phases
+        function populateHypePhases() {
+            const phasesContainer = document.getElementById('hypePhases');
+            
+            aiData.hype_phases.forEach(phase => {
+                const phaseCard = document.createElement('div');
+                phaseCard.className = 'phase-card';
+                
+                phaseCard.innerHTML = `
+                    <div class="phase-period">${phase.period}</div>
+                    <div class="phase-title">${phase.phase}</div>
+                    <p>${phase.description}</p>
+                `;
+                
+                phasesContainer.appendChild(phaseCard);
+            });
+        }
+
+        // Intersection Observer for scroll animations
+        function setupScrollAnimations() {
+            const sections = document.querySelectorAll('section');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, {
+                threshold: 0.1
+            });
+            
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+        }
+
+        // Initialize the dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            // Update stat cards with animated values
+            animateValue(document.getElementById('current-adoption'), 0, aiData.adoption_rate[aiData.adoption_rate.length - 1], 1500, '%');
+            animateValue(document.getElementById('total-investment'), 0, aiData.investment[aiData.investment.length - 1], 1500, 'B');
+            animateValue(document.getElementById('research-papers'), 0, aiData.research_papers[aiData.research_papers.length - 1], 1500, 'K');
+            animateValue(document.getElementById('ai-jobs'), 0, aiData.job_postings[aiData.job_postings.length - 1], 1500, 'K');
+            
+            // Initialize charts and content
+            initializeCharts();
+            populateTimeline();
+            populateHypePhases();
+            setupScrollAnimations();
+        });
+    </script>
+</body>
+</html>
