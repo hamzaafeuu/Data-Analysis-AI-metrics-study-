@@ -1,2 +1,23 @@
-# Data-Analysis-AI-metrics-study-
-AI Usage Analysis (2000-2025): Interactive data visualization tracking AI adoption, investment, research &amp; job trends. Features interactive charts, historical timeline, hype cycle analysis &amp; clean UI with micro-animations. Built with Python for analysis &amp; HTML/CSS/JS for frontend.
+# AI Usage Analysis (2000-2025)
+
+A comprehensive data analysis website tracking the evolution, adoption, and impact of artificial intelligence from 2000 to 2025.
+
+## 📊 Project Overview
+
+This project analyzes AI usage trends through:
+- Adoption rates among companies
+- Investment patterns
+- Research publications
+- Job market trends
+- Key historical events
+
+## 🚀 Live Demo
+
+[Add your GitHub Pages or deployment link here]
+
+## 🛠️ Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/yourusername/ai-analysis-website.git
+   cd ai-analysis-website
